@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>DermoScan</title>
+<style>
+  html,body 
+  {
+    font-weight: 400;
+    font-family: 'Roboto', sans-serif;
+  }
+  .navbar {
+    overflow: hidden;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  }
+  .navbar a 
+  {
+    float: right;
+    display: block;
+    color: black; 
+    text-align: center;
+    padding: 14px 20px;
+    text-decoration: none;
+  }
+  .navbar a:hover 
+  {
+    color: red; 
+  }
+  .site-name 
+  {
+    float: left;
+    padding: 14px 20px;
+    font-size: 28px; 
+    font-weight: bold;
+    color: white; 
+  }
+  .dermo 
+  {
+    color: red;
+  }
+  .scan 
+  {
+    color: black;
+  }
+  .container 
+  {
+    display: flex;
+    flex-direction: row;
+  }
+  .left 
+  {
+    flex: 1;
+    padding: 20px;
+  }
+  .right 
+  {
+    flex: 1;
+    padding: 20px;
+    display: flex; 
+    flex-direction: column; 
+    justify-content: center; 
+  }
+  .image 
+  {
+    max-width: 70%; 
+    height: auto;
+    display: block;
+    margin-left: auto; 
+  }
+  .upload-container 
+  {
+    text-align: left;
+  }
+  .upload-btn 
+  {
+    background-color:black;
+    color: white;
+    padding: 10px 20px;
+    border: 2px solid transparent; 
+    border-radius: 5px;
+    cursor: pointer;
+    transition: border-color 0.3s ease; 
+  }
+  .upload-btn:hover 
+  {
+    border-color:grey; 
+  }
+  .predicted-class 
+  {
+    color: rgb(39, 198, 39); 
+  }
+  .symptoms 
+  {
+    color: rgb(39, 198, 39);
+    text-align: right;
+
+  }
+  #predictionContent 
+  {
+    max-width: 600px;
+    margin: auto;
+  }
+</style>
+</head>
+<body>
+<div class="navbar">
+  <div class="site-name"><span class="dermo">Dermo</span><span class="scan">Scan</span></div>
+  <a href="/upload">Previous</a>
+  <a href="/">Home</a>
+</div>
+<div class="container">
+  <div class="left">
+    <h3>Prediction Result</h3>
+    <h1 style="font-size: 36px;"><span class="predicted-class">{{ predicted_class }}</span></h1>
+    <p id="predictionContent">Loading...</p>
+    <p id="additionalPredictionContent"></p><br>
+    {% if predicted_class != 'Healthy Skin' %}
+    <button class="upload-btn" onclick="window.location.href='/symptoms'">Know more</button>
+    {% endif %}
+</div>
+  <div class="right">
+    <img class="image" src="{{ url_for('static', filename='image23.jpg') }}" alt="Static Image">
+  </div>
+</div>
+<script>
+  var predictedClass = "{{ predicted_class }}";
+  var paragraphElement = document.getElementById('predictionContent');
+  var additionalParagraphElement = document.getElementById('additionalPredictionContent');
+  function updateContent(predictedClass) 
+  {
+    switch (predictedClass) 
+    {
+      case 'Actinic Keratoses':
+        paragraphElement.innerHTML = "Actinic keratoses develops slowly. It most likely appears on areas of skin often exposed to the sun. These can include the face, ears, bald scalp, neck, backs of hands and forearms, and lips. It tends to lie flat against the skin of the head and neck, but appears as a bump on arms and hands. The base of an actinic keratosis may be light or dark, tan, pink, red, or a combination of these. Or it may be the same color as the skin. The scale or crust may be horny, dry, and rough. In some cases, it may itch or have a prickly or sore feeling.";
+        additionalParagraphElement.innerHTML = "<strong>Nature:</strong> <span style='color: orange;'>It is a skin condition but have the potential to develop into skin cancer</span>";
+      break;
+      case 'Basal Cell Carcinoma':
+        paragraphElement.innerHTML = "Basal cell carcinoma (BCC) is a type of skin cancer that forms in the basal cells of your skin. Basal cells exist in the lower part of your epidermis, which is the outside layer of your skin. Basal cell carcinoma looks like a small, sometimes shiny bump or scaly flat patch on your skin that slowly grows over time.";
+        additionalParagraphElement.innerHTML = "<strong>Nature:</strong> <span style='color: red;'>Cancerous</span>";
+      break;
+      case 'Dermato Fibroma':
+        paragraphElement.innerHTML="A dermatofibroma is a common overgrowth of the fibrous tissue situated in the dermis (the deeper of the two main layers of the skin). It is benign (harmless) and will not turn into a cancer. Whilst dermatofibromas are harmless, they can be similar in appearance to other concerning skin tumours. It is therefore important to see a health professional for a diagnosis.";
+        additionalParagraphElement.innerHTML = "<strong>Nature:</strong> <span style='color: green;'>Non-Cancerous; It is a skin condtion</span>";
+      break;
+      case 'Benign Keratosis Lesion':
+        paragraphElement.innerHTML = "A seborrheic keratosis is a noncancerous (benign) growth on the skin. It’s color can range from white, tan, brown, or black. Most are raised and appear stuck on to the skin. They may look like warts.Seborrheic keratoses are not cancer. But they can sometimes look like growths that are cancer. Because of this, your healthcare provider may need to take a biopsy sample and examine it";
+        additionalParagraphElement.innerHTML = "<strong>Nature:</strong> <span style='color: orange;'>It is a skin condition but have the potential to develop into skin cancer</span>";
+      break;
+      case 'Melanocytic Nevi':
+        paragraphElement.innerHTML = "Melanocytic nevi are benign tumors that that arise in the skin. They have different sizes and colors as outlined above. Benign nevi are usually round or oval-shaped and are uniform in color. There are more nevi in areas of the body that have greater long-term exposure to the sun, such as the outer arm compared with the inner arm.";
+        additionalParagraphElement.innerHTML = "<strong>Nature:</strong> <span style='color: orange;'>Non-Cancerous however, some atypical or dysplastic nevi may have a slightly increased risk of developing into melanoma</span>";
+      break;
+      case 'Melanoma':
+        paragraphElement.innerHTML = "Melanoma is the most dangerous type of skin cancer. It may appear as a new spot or as a change in an existing mole or freckle. Over 95% of skin cancers can be successfully treated if they are found early.If untreated, melanomas can spread to other parts of the body and may not be curable so it is important to see your doctor as soon as you notice any changes to your skin.";
+        additionalParagraphElement.innerHTML = "<strong>Nature:</strong> <span style='color: red;'>Cancerous</span>";
+      break;
+      case 'Vascular Lesion':
+        paragraphElement.innerHTML="Vascular lesions are abnormal growths or malformations in the blood vessels, which can occur in various parts of the body. They can be congenital or acquired and may result from injury, infection, or other underlying medical conditions. Vascular lesions can range from harmless to potentially life-threatening, depending on their location and severity.";
+        additionalParagraphElement.innerHTML = "<strong>Nature:</strong> <span style='color: red;'>Cancerous</span>";
+      break;
+      case 'Healthy Skin':
+        paragraphElement.innerHTML = "Your skin seems to be healthy";
+      break;
+      default:
+        paragraphElement.innerHTML = "No information available for this class.";
+    }
+  }
+  updateContent(predictedClass);
+</script>
+</body>
+</html>

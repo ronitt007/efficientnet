@@ -1,0 +1,333 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>DermoScan</title>
+<style>
+    html,body 
+    {
+        font-weight: 400;
+        font-family: 'Roboto', sans-serif;
+    }
+    .navbar 
+    {
+        overflow: hidden;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    }
+    .navbar a 
+    {
+        float: right;
+        display: block;
+        color: black; 
+        text-align: center;
+        padding: 14px 20px;
+        text-decoration: none;
+    }
+    .navbar a:hover 
+    {
+        color: red; 
+    } 
+    .site-name 
+    {
+        float: left;
+        padding: 14px 20px;
+        font-size: 28px; 
+        font-weight: bold; 
+        color: white; 
+    }
+    .dermo 
+    {
+        color: red;
+    }
+    .scan 
+    {
+        color: black;
+    }
+    .category 
+    {
+        padding-top: 20px;
+        padding-bottom: 10px;
+    }
+    .container-xxl 
+    {
+        padding-top: 20px;
+        padding-bottom: 20px;
+    }
+    .card 
+    {
+        margin-bottom: 30px;
+        background-color: #fff;
+        border-radius: 8px;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+        width: 100%;
+        max-width: 350px; /* Adjust the max-width as needed */
+        height: auto;
+    }
+    .card:hover 
+    {
+        transform: translateY(-5px);
+        box-shadow: 0 8px 12px rgba(0, 0, 0, 0.1);
+    }
+    .img-card 
+    {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        width: 100%;
+        height: 200px;
+        overflow: hidden;
+    }
+    .img-card img 
+    {
+        max-width: 100%;
+        max-height: 100%;
+        object-fit: cover;
+        margin: 25px auto 0;
+    }
+    .card-content 
+    {
+        padding: 20px;
+        text-align: left;
+    }
+    .card-title 
+    {
+        margin-top: 0;
+        margin-bottom: 15px;
+        font-size: 1.5rem;
+        font-weight: 700;
+        color: #343a40;
+    }
+    .info-box 
+    {
+        margin-bottom: 10px;
+        display: flex;
+        align-items: center;
+    }
+    .info-label 
+    {
+        margin-right: 10px;
+        font-weight: bold;
+        color: #6c757d;
+    }
+    .info-value 
+    {
+        flex-grow: 1;
+        color: #343a40;
+    }
+    .day-box, .time-box 
+    {
+        padding: 5px 10px;
+        margin-right: 5px;
+        border-radius: 20px;
+        color: #fff;
+        font-weight: bold;
+    }
+    .day-box 
+    {
+        background-color: #198754;
+    }
+    .time-box 
+    {
+        background-color: #0d6efd;
+    }
+    .card-container 
+    {
+        display: flex;
+        justify-content: space-between;
+        flex-wrap: wrap; 
+    }
+</style>
+</head>
+<body>
+<div class="navbar">
+  <div class="site-name"><span class="dermo">Dermo</span><span class="scan">Scan</span></div>
+  <a href="/symptoms">Previous</a>
+  <a href="/">Home</a>
+</div>
+<section class="wrapper">
+    <div class="container">
+        <div class="row">
+            <center><h1>Dermatologist</h1></center>
+            <div class="card-container">
+                <div class="card">
+                    <div class="img-card">
+                        <img class="image" src="{{ url_for('static', filename='DR-DIANA-ELIZABETH.jpg') }}" alt="Static Image">
+                    </div>
+                    <div class="card-content">
+                        <h5 class="card-title">Dr. Ave Maria</h5>
+                        <div class="info-box">
+                            <div class="info-label">Hospital:</div>
+                            <div class="info-value">Oliva Skin & Hair Clinic</div>
+                        </div>
+                        <div class="info-box">
+                            <div class="info-label">Place:</div>
+                            <div class="info-value">Kadavanthra, Ernakulam</div>
+                        </div>
+                        <div class="info-box">
+                            <div class="info-label">Contact:</div>
+                            <div class="info-value">+91 9845686369</div>
+                        </div>
+                        <div class="info-box">
+                            <div class="info-label">Day:</div>
+                            <div class="info-value day-box">Tuesday, Thursday</div>
+                        </div>
+                        <div class="info-box">
+                            <div class="info-label">Time:</div>
+                            <div class="info-value time-box">9:00 AM - 9:00 PM</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="card">
+                    <div class="img-card">
+                        <img class="image" src="{{ url_for('static', filename='Dr.-Indu-B.-R.jpg') }}" alt="Static Image">
+                    </div>
+                    <div class="card-content">
+                        <h5 class="card-title">Dr. Indu B.R</h5>
+                        <div class="info-box">
+                            <div class="info-label">Hospital:</div>
+                            <div class="info-value">Skinessence Clinic</div>
+                        </div>
+                        <div class="info-box">
+                            <div class="info-label">Place:</div>
+                            <div class="info-value">Kadavanthra, Ernakulam</div>
+                        </div>
+                        <div class="info-box">
+                            <div class="info-label">Contact:</div>
+                            <div class="info-value">+91 9556754548</div>
+                        </div>
+                        <div class="info-box">
+                            <div class="info-label">Day:</div>
+                            <div class="info-value day-box">Monday - Saturday</div>
+                        </div>
+                        <div class="info-box">
+                            <div class="info-label">Time:</div>
+                            <div class="info-value time-box">9:00 AM - 9:00 PM</div>
+                        </div>
+                    </div>
+                </div>
+            <div class="card">
+                <div class="img-card">
+                    <img class="image" src="{{ url_for('static', filename='Drrrrrr.jpg') }}" alt="Static Image">
+                </div>
+                <div class="card-content">
+                    <h5 class="card-title">Dr. Dhanus Sadasivan</h5>
+                    <div class="info-box">
+                        <div class="info-label">Hospital:</div>
+                        <div class="info-value">Jyothi Clinic</div>
+                    </div>
+                    <div class="info-box">
+                        <div class="info-label">Place:</div>
+                        <div class="info-value">Palayam, Trivandrum</div>
+                    </div>
+                    <div class="info-box">
+                        <div class="info-label">Contact:</div>
+                        <div class="info-value">+91 80470 91255</div>
+                    </div>
+                        <div class="info-box">
+                            <div class="info-label">Day:</div>
+                            <div class="info-value day-box">Friday</div>
+                        </div>
+                        <div class="info-box">
+                            <div class="info-label">Time:</div>
+                            <div class="info-value time-box">10:00 AM - 2:00 PM</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            </div>
+        <div class="row">
+        <center><h1>Oncologist</h1></center>
+        <div class="card-container">
+            <div class="card">
+                <div class="img-card">
+                    <img class="image" src="{{ url_for('static', filename='Dr.-Jacob-Chacko-neurology-1.jpg') }}" alt="Static Image">
+                </div>
+                <div class="card-content">
+                    <h5 class="card-title">Dr. Jacob Chacko</h5>
+                    <div class="info-box">
+                        <div class="info-label">Hospital:</div>
+                        <div class="info-value">Welcare Hospital</div>
+                    </div>
+                    <div class="info-box">
+                        <div class="info-label">Place:</div>
+                        <div class="info-value">Trivandrum</div>
+                    </div>
+                    <div class="info-box">
+                        <div class="info-label">Contact:</div>
+                        <div class="info-value">+91 9467534457</div>
+                    </div>
+                    <div class="info-box">
+                        <div class="info-label">Day:</div>
+                        <div class="info-value day-box">Monday - Wednesday</div>
+                    </div>
+                    <div class="info-box">
+                        <div class="info-label">Time:</div>
+                        <div class="info-value time-box">4:00 AM - 6:30 PM</div>
+                    </div>
+                    
+                </div>
+            </div>
+            <div class="card">
+                <div class="img-card">
+                    <img class="image" src="{{ url_for('static', filename='Dr.-Mathew-Varghese-1.webp') }}" alt="Static Image">
+
+                </div>
+                <div class="card-content">
+                    <h5 class="card-title">Dr. Mathew Varghese</h5>
+                    <div class="info-box">
+                        <div class="info-label">Hospital:</div>
+                        <div class="info-value">Aster Healthcare</div>
+                    </div>
+                    <div class="info-box">
+                        <div class="info-label">Place:</div>
+                        <div class="info-value">Ernakulam</div>
+                    </div>
+                    <div class="info-box">
+                        <div class="info-label">Contact:</div>
+                        <div class="info-value">+91 9766439245</div>
+                    </div>
+                    <div class="info-box">
+                        <div class="info-label">Day:</div>
+                        <div class="info-value day-box">Thursday, Saturday</div>
+                    </div>
+                    <div class="info-box">
+                        <div class="info-label">Time:</div>
+                        <div class="info-value time-box">9:00 AM - 2:00 PM</div>
+                    </div>
+                </div>
+            </div>
+            <div class="card">
+                <div class="img-card">
+                    <img class="image" src="{{ url_for('static', filename='Dr.-Meera-Menon-1.webp') }}" alt="Static Image">
+                </div>
+                <div class="card-content">
+                    <h5 class="card-title">Dr. Meera Menon</h5>
+                    <div class="info-box">
+                        <div class="info-label">Hospital:</div>
+                        <div class="info-value">Sunrise Hospital</div>
+                    </div>
+                    <div class="info-box">
+                        <div class="info-label">Place:</div>
+                        <div class="info-value">Thrissur</div>
+                    </div>
+                    <div class="info-box">
+                        <div class="info-label">Contact:</div>
+                        <div class="info-value">+91 9843667329</div>
+                    </div>
+                    <div class="info-box">
+                        <div class="info-label">Day:</div>
+                        <div class="info-value day-box">Monday, Wednesday</div>
+                    </div>
+                    <div class="info-box">
+                        <div class="info-label">Time:</div>
+                        <div class="info-value time-box">5:00 AM - 8:00 PM</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+</body>
+</html>

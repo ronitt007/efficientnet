@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        *{
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: sans-serif;
+        }
+        nav{
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 15px 3%;
+            z-index: 10;
+        }
+
+        .nav-btn{
+            background: #000;
+            color: #fff;
+            font-size: 16px;
+            padding: 15px 25px;
+            border: 0;
+            outline: 0;
+            border-radius: 40px;
+            cursor: pointer;
+
+        }
+        .header{
+            width: 100%;
+            min-height: 100vh;
+            padding: 0 10%;
+            display: flex;
+            justify-content: center;
+            flex-direction: column;
+        }
+        .header h3{
+            margin-top: 100px;
+            font-size: 10vw;
+            line-height: 11vw;
+        }
+        .btn-container{
+            margin: 20px 0;
+        }
+        .header button{
+            border: 0;
+            outline: 0;
+            display: inline-flex;
+            align-items: center;
+            font-size: 18px;
+            margin-right: 20px;
+            cursor: pointer;
+        }
+        .btn-dark{
+            background: #000;
+            color: #fff;
+            padding: 10px 10px 10px 30px;
+            border-radius: 40px;
+        }
+        .btn-dark img{
+            width: 40px;
+            background: #fff;
+            border-radius: 50%;
+            padding: 10px;
+            margin-left: 30px;
+        }
+        .user-img{
+            width:80%;
+            max-width: 500px;
+            position: absolute;
+            right: 13%;
+            bottom:0;
+        }
+        .header h3 span{
+            background: linear-gradient(#000,#000);
+            background-repeat: no-repeat;
+            -webkit-text-fill-color: transparent;
+            -webkit-background-clip: text;
+            background-size:0%;
+        }
+        .header h3 span:first-child{
+            animation: textcolor 2s linear infinite alternate;
+        }
+        @keyframes textcolor{
+            0%{
+                background-size: 0%;
+            }
+            40%{
+                background-size: 100%;
+            }
+            100%{
+                background-size: 100%;
+            }
+            
+        }
+        .header h3 span:last-child{
+            animation: textcolor2 2s linear infinite alternate;
+        }
+        @keyframes textcolor2{
+            0%{
+                background-size: 0%;
+            }
+            40%{
+                background-size: 0%;
+            }
+            100%{
+                background-size: 100%;
+            }
+            
+        }
+        
+    </style>
+</head>
+<body>
+    <nav>
+        <img src="{{ url_for('static', filename='imgindex.png') }}" alt="" width="15%">
+
+    </nav>
+    <div class="header">
+        <h3><span>SKIN CANCER</span><br><span>DETECTION</span></h3>
+        <div class="btn-container">
+            <button class="btn-dark" onclick="window.location.href='/upload'">Upload<img src="{{ url_for('static', filename='add.png') }}" alt=""></button>
+        </div>
+        <p>Join us in the fight against skin cancer!</p>
+        <img src="{{ url_for('static', filename='doctorpng.png') }}" alt="" class="user-img">
+    </div>
+    <script>
+        let navbar=document.querySelector('nav');
+        window.onscroll=function(){
+            if(window.scrollY>0){
+                navbar.style.background='#eefff9';
+
+            }
+            else{
+                navbar.style.background='transparent';
+            }
+        }
+    </script>
+</body>
+</html>

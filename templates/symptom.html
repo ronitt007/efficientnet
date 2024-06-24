@@ -1,0 +1,409 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>DermoScan</title>
+<style>
+    html,body 
+    {
+        font-weight: 400;
+        font-family: 'Roboto', sans-serif;
+    }
+    .navbar 
+    {
+        overflow: hidden;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    }
+    .navbar a 
+    {
+        float: right;
+        display: block;
+        color: black; 
+        text-align: center;
+        padding: 14px 20px;
+        text-decoration: none;
+    }
+    .navbar a:hover 
+    {
+        color: red; 
+    }
+    .site-name 
+    {
+        float: left;
+        padding: 14px 20px;
+        font-size: 28px; 
+        font-weight: bold;
+        color: white; 
+    }
+    .dermo 
+    {
+        color: red;
+    }
+    .scan 
+    {
+        color: black;
+    }
+    .active-link 
+    { 
+        color: red !important;
+    }
+    body
+    {
+        align-items: center;
+    }
+        .content {
+    padding: 30px;
+    color: #4e4545;
+    }
+    h3 
+    {
+        text-align: center;
+    }
+    .check 
+    {
+        width: 60%; 
+        margin: 100px auto; 
+        margin-top: 50px;
+        padding: 20px;
+        border: 1px solid #ccc;
+        box-shadow: 0 10px 10px rgba(0, 0, 0, 0.1);
+        border-radius: 8px;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+    }
+    .container 
+    {
+        display: block;
+        position: relative;
+        padding-left: 25px; 
+        cursor: pointer;
+        font-size: 16px; 
+        line-height: 1.4; 
+    }
+    .container input 
+    {
+        position: absolute;
+        opacity: 0;
+        cursor: pointer;
+    }
+    .checkmark 
+    {
+        position: absolute;
+        top: 0;
+        left: 0;
+        height: 20px; 
+        width: 20px; 
+        border: 1px solid #666; 
+        border-radius: 3px; 
+        transition: background-color 0.3s ease; 
+    }
+    .container:hover .checkmark 
+    {
+        background-color: #ddd; 
+    }
+    .container input:checked ~ .checkmark 
+    {
+        background-color: #000; 
+        border-color: #000; 
+    }
+    .checkmark:after 
+    {
+        content: "";
+        position: absolute;
+        display: none;
+    }   
+    .container input:checked ~ .checkmark:after 
+    {
+        display: block;
+    }
+    .container .checkmark:after 
+    {
+        left: 6px; 
+        top: 2px;
+        width: 5px; 
+        height: 10px;
+        border: solid #fff; 
+        border-width: 0 2px 2px 0; 
+        transform: rotate(45deg);
+    }
+    .submit-button 
+    {
+        background-color:black;
+        color: white;
+        padding: 10px 20px;
+        border: 2px solid transparent; 
+        border-radius: 5px;
+        cursor: pointer;
+        transition: border-color 0.3s ease; 
+    }
+    .submit-button:hover
+    {
+        border-color:grey; 
+    }
+    textarea.form-control 
+    {
+        background: rgb(197, 25, 25); 
+        text-align: center; 
+        font-weight: bold; 
+        border: 1px solid #ccc;
+        padding: 10px; 
+        width: 100%; 
+        box-sizing: border-box; 
+    }
+    .button-container 
+    {
+        display: flex; 
+        justify-content: space-between; 
+        width: 80%; 
+        margin: 20px auto; 
+    }
+    .modal 
+    {
+        display: none;
+        position: fixed;
+        z-index: 1;
+        left: 0;
+        top: 0;
+        width: 100%;
+        height: 100%;
+        overflow: auto;
+        background-color: rgb(0,0,0);
+        background-color: rgba(0,0,0,0.4);
+        padding-top: 60px;
+    }
+    .modal-content 
+    {
+        background-color: #fefefe;
+        margin: 5% auto;
+        padding: 20px;
+        border: 1px solid #888;
+        width: 80%;
+    }
+    .close 
+    {
+        color: #aaa;
+        float: right;
+        font-size: 28px;
+        font-weight: bold;
+    }
+
+    .close:hover,.close:focus 
+    {
+        color: black;
+        text-decoration: none;
+        cursor: pointer;
+    }
+</style>
+</head>
+<body>
+<div class="navbar">
+  <div class="site-name"><span class="dermo">Dermo</span><span class="scan">Scan</span></div>
+  <a href="/upload">Previous</a>
+  <a href="/">Home</a>
+</div>
+<div class="content">
+    <center><h1>Mention your symptoms</h1></center>
+    <div class="check">
+        <form action="#"><br>
+            <div id="symptomCheckboxes"></div> 
+            <div class="button-container">
+                <center><button type="button" onclick="checkSymptoms()" class="submit-button">Submit</button></center>
+                <center><button type="button" onclick="clearAllCheckboxes()" class="submit-button">Clear All</button></center>
+            </div>
+        </form>
+    </div>
+</div>
+<div id="myModal" class="modal">
+    <div class="modal-content">
+        <span class="close">&times;</span>
+        <p id="modalMessage"></p>
+        <button id="modalButton" class="submit-button">Close</button>
+    </div>
+</div>   
+<script>
+    var predictedClass = "{{ predicted_class }}";
+    function updateContent(predictedClass) 
+    {
+        var symptomCheckboxes = document.getElementById('symptomCheckboxes');
+        switch (predictedClass) 
+        {
+            case 'Actinic Keratoses':
+            symptomCheckboxes.innerHTML = `
+                <h3>Actinic Keratoses</h3><br><br>
+                <label for="checkbox1" class="container"><input type="checkbox" id="checkbox1" name="checkbox">A rough-feeling small patch of skin on the back of his neck felt like sandpaper<span class="checkmark"></span></label><br><br>
+                <label for="checkbox2" class="container"><input type="checkbox" id="checkbox2" name="checkbox">Rough, scaly bumps that may look like pimples<span class="checkmark"></span></label><br><br>
+                <label for="checkbox3" class="container"><input type="checkbox" id="checkbox3" name="checkbox">Many scaly, raised spots on the skin that may look like a rash<span class="checkmark"></span></label><br><br>
+                <label for="checkbox4" class="container"><input type="checkbox" id="checkbox4" name="checkbox">Several spots on this woman's forehead, nose, cheeks and rough-feeling patch that may be red, pink, skin-colored, or gray<span class="checkmark"></span></label><br><br>
+                <label for="checkbox5" class="container"><input type="checkbox" id="checkbox5" name="checkbox">Flat, scaly area that may look like an age spot<span class="checkmark"></span></label><br><br>
+                <label for="checkbox6" class="container"><input type="checkbox" id="checkbox6" name="checkbox">A dry, scaly lip that never heals<span class="checkmark"></span></label><br><br>
+                <label for="checkbox7" class="container"><input type="checkbox" id="checkbox7" name="checkbox">Scaly, white patches on one (or both) lips<span class="checkmark"></span></label><br><br>
+                <label for="checkbox8" class="container"><input type="checkbox" id="checkbox8" name="checkbox">Loss of color on one or both lips<span class="checkmark"></span></label><br><br>
+            `;
+            break;
+            case 'Basal Cell Carcinoma':
+                symptomCheckboxes.innerHTML = `
+                <h3>Basal cell carcinoma</h3><br><br>
+                <label for="checkbox9" class="container"><input type="checkbox" id="checkbox9" name="checkbox">A shiny, skin-colored bump that's translucent<span class="checkmark"></span></label><br><br>
+                <label for="checkbox10" class="container"><input type="checkbox" id="checkbox10" name="checkbox">A brown, black or blue lesion<span class="checkmark"></span></label><br><br>
+                <label for="checkbox11" class="container"><input type="checkbox" id="checkbox11" name="checkbox">A flat, scaly patch with a raised edge<span class="checkmark"></span></label><br><br>
+                <label for="checkbox12" class="container"><input type="checkbox" id="checkbox12" name="checkbox">A white, waxy, scar-like lesion without a clearly defined border<span class="checkmark"></span></label><br><br>
+            `;
+            break;
+            case 'Dermato Fibroma':
+                symptomCheckboxes.innerHTML = `
+                <h3>Dermatofibroma</h3><br><br>
+                <label for="checkbox13" class="container"><input type="checkbox" id="checkbox13" name="checkbox">Small round or oval bumps less than 1 centimeter (cm) in diameter<span class="checkmark"></span></label><br><br>
+                <label for="checkbox14" class="container"><input type="checkbox" id="checkbox14" name="checkbox">May be flesh-colored, brown or reddish-brown<span class="checkmark"></span></label><br><br>
+                <label for="checkbox15" class="container"><input type="checkbox" id="checkbox15" name="checkbox">Form on your arms or legs<span class="checkmark"></span></label><br><br>
+                <label for="checkbox16" class="container"><input type="checkbox" id="checkbox16" name="checkbox">Feel firm to the touch and can be itchy, tender or painful<span class="checkmark"></span></label><br><br>
+                <label for="checkbox17" class="container"><input type="checkbox" id="checkbox17" name="checkbox">Shaped like a dimple — the center of the lesion falls in, and the edges of the lesion pucker around it<span class="checkmark"></span></label><br><br>
+            `;
+            break;
+            case 'Benign Keratosis Lesion':
+                symptomCheckboxes.innerHTML = `
+                <h3>Benign Keratosis Lesion</h3><br><br>
+                <label for="checkbox34" class="container"><input type="checkbox" id="checkbox34" name="checkbox">A round or oval-shaped waxy or rough bump, typically on the face, chest, a shoulder or the back<span class="checkmark"></span></label><br><br>
+                <label for="checkbox35" class="container"><input type="checkbox" id="checkbox35" name="checkbox">A flat growth or a slightly raised bump with a scaly surface, with a characteristic "pasted on" look<span class="checkmark"></span></label><br><br>
+                <label for="checkbox36" class="container"><input type="checkbox" id="checkbox36" name="checkbox">Varied size, from very small to more than 1 inch (2.5 centimeters) across<span class="checkmark"></span></label><br><br>
+                <label for="checkbox37" class="container"><input type="checkbox" id="checkbox37" name="checkbox">Varied number, ranging from a single growth to multiple growths<span class="checkmark"></span></label><br><br>
+                <label for="checkbox38" class="container"><input type="checkbox" id="checkbox38" name="checkbox">Very small growths clustered around the eyes or elsewhere on the face, sometimes called flesh moles or dermatosis papulosa nigra, common on Black or brown skin<span class="checkmark"></span></label><br><br>
+                <label for="checkbox39" class="container"><input type="checkbox" id="checkbox39" name="checkbox">Varied in color, ranging from light tan to brown or black<span class="checkmark"></span></label><br><br>
+                <label for="checkbox40" class="container"><input type="checkbox" id="checkbox40" name="checkbox">Itchiness<span class="checkmark"></span></label><br><br>
+            `;
+            break;
+            case 'Melanocytic Nevi':
+                symptomCheckboxes.innerHTML = `
+                <h3>Melanocytic Nevi</h3><br><br>
+                <label for="checkbox27" class="container"><input type="checkbox" id="checkbox27" name="checkbox">The color changes of mole<span class="checkmark"></span></label><br><br>
+                <label for="checkbox28" class="container"><input type="checkbox" id="checkbox28" name="checkbox">Mole gets smaller or bigger<span class="checkmark"></span></label><br><br>
+                <label for="checkbox29" class="container"><input type="checkbox" id="checkbox29" name="checkbox">Mole changes in shape, texture, or height<span class="checkmark"></span></label><br><br>
+                <label for="checkbox30" class="container"><input type="checkbox" id="checkbox30" name="checkbox">The skin on the surface becomes dry or scaly<span class="checkmark"></span></label><br><br>
+                <label for="checkbox31" class="container"><input type="checkbox" id="checkbox31" name="checkbox">It becomes hard or feels lumpy<span class="checkmark"></span></label><br><br>
+                <label for="checkbox32" class="container"><input type="checkbox" id="checkbox32" name="checkbox">It starts to itch<span class="checkmark"></span></label><br><br>
+                <label for="checkbox33" class="container"><input type="checkbox" id="checkbox33" name="checkbox">It bleeds or oozes<span class="checkmark"></span></label><br><br>
+            `;
+            break;
+            case 'Melanoma':
+                symptomCheckboxes.innerHTML = `
+                <label for="checkbox20" class="container"><input type="checkbox" id="checkbox20" name="checkbox">Changing mole<span class="checkmark"></span></label><br><br>
+                <label for="checkbox21" class="container"><input type="checkbox" id="checkbox21" name="checkbox">Spot that looks like a new mole, freckle, or age spot, but it looks different from the others on your skin<span class="checkmark"></span></label><br><br>
+                <label for="checkbox22" class="container"><input type="checkbox" id="checkbox22" name="checkbox">Spot that has a jagged border, more than one color, and is growing<span class="checkmark"></span></label><br><br>
+                <label for="checkbox23" class="container"><input type="checkbox" id="checkbox23" name="checkbox">Dome-shaped growth that feels firm and may look like a sore, which may bleed<span class="checkmark"></span></label><br><br>
+                <label for="checkbox24" class="container"><input type="checkbox" id="checkbox24" name="checkbox">Dark-brown or black vertical line beneath a fingernail or toenail<span class="checkmark"></span></label><br><br>
+                <label for="checkbox25" class="container"><input type="checkbox" id="checkbox25" name="checkbox">Band of darker skin around a fingernail or toenail<span class="checkmark"></span></label><br><br>
+                <label for="checkbox26" class="container"><input type="checkbox" id="checkbox26" name="checkbox">Slowly growing patch of thick skin that looks like a scar<span class="checkmark"></span></label><br><br>
+            `;
+            break;
+            case 'Vascular Lesion':
+                symptomCheckboxes.innerHTML = `
+                <h3>Vascular lesions</h3><br><br>
+                <label for="checkbox18" class="container"><input type="checkbox" id="checkbox18" name="checkbox">Look like a raised red, blue, purple, brown or black birthmark<span class="checkmark"></span></label><br><br>
+                <label for="checkbox19" class="container"><input type="checkbox" id="checkbox19" name="checkbox">These marks may swell, bleed or cause pain<span class="checkmark"></span></label><br><br>
+            `;
+            break;
+            case 'Healthy Skin':
+                symptomCheckboxes.innerHTML = `
+                <h3>Healthy Skin</h3><br><br>
+                <label for="checkbox18" class="container"><input type="checkbox" id="checkbox18" name="checkbox">Look like a raised red, blue, purple, brown or black birthmark<span class="checkmark"></span></label><br><br>
+                <label for="checkbox19" class="container"><input type="checkbox" id="checkbox19" name="checkbox">These marks may swell, bleed or cause pain<span class="checkmark"></span></label><br><br>
+                `;
+            break;
+            default:
+                symptomCheckboxes.innerHTML = `
+                    <h3>No information available for this class</h3><br><br>
+                    <!-- No checkboxes needed -->
+                `;
+        }
+    }
+    updateContent(predictedClass);
+    function checkSymptoms() 
+    {
+        var checkboxes = document.querySelectorAll('input[type="checkbox"]');
+        var checkedCount = 0;
+        checkboxes.forEach(function(checkbox) 
+        {
+            if (checkbox.checked) 
+            {
+                checkedCount++;
+            }
+        });
+        var totalCheckboxes = checkboxes.length;
+        var predictedClass = "{{ predicted_class }}"; 
+        if (checkedCount === 0) 
+        {
+            displayModal("If you don't have any of these symptoms, then check the image once more.");
+        } 
+        else 
+        {
+            var message;
+            if (predictedClass === 'Basal Cell Carcinoma' || predictedClass === 'Melanoma' || predictedClass === 'Vascular Lesion') 
+            {
+                message = "You should consult the doctor immediately.";
+            } 
+            else 
+            {
+                if (checkedCount < totalCheckboxes / 2) 
+                {
+                    message = "You should consult the doctor in 1 week.";
+                } 
+                else if (checkedCount === totalCheckboxes) 
+                {
+                    message = "You should consult the doctor within 3 days.";
+                } 
+                else 
+                {
+                    message = "You should consult the doctor within 2 days.";
+                }
+            }
+            displayModal(message);
+        }
+    }
+    function displayModal(message) {
+    var modal = document.getElementById("myModal");
+    var modalMessage = document.getElementById("modalMessage");
+    var modalButton = document.getElementById("modalButton");
+    modalMessage.textContent = message;
+    modal.style.display = "block";
+    var span = document.getElementsByClassName("close")[0];
+    span.onclick = function() 
+    {
+        modal.style.display = "none";
+    }
+    window.onclick = function(event) 
+    {
+        if (event.target == modal) 
+        {
+            modal.style.display = "none";
+        }
+    }
+    if (message === "If you don't have any of these symptoms, then check the image once more.") 
+    {
+        modalButton.textContent = "Recheck";
+        modalButton.onclick = function() 
+        {
+            window.location.href = "/upload";
+        };
+    } 
+    else 
+    {
+        modalButton.textContent = "Doctors List";
+        modalButton.onclick = function() 
+        {
+            window.location.href = "/doctors";
+        };
+    }
+}
+function clearAllCheckboxes() 
+{
+    var checkboxes = document.querySelectorAll('input[type="checkbox"]');
+    checkboxes.forEach(function(checkbox) 
+    {
+        checkbox.checked = false;
+    });
+}
+</script>
+</body>
+</html>
